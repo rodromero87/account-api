@@ -1,0 +1,19 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: account
+      MYSQL_USER: account
+      MYSQL_PASSWORD: account
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      - SERVICES=sqs
+      - AWS_DEFAULT_REGION=us-east-1
+    ports:
+      - "4566:4566"
+
