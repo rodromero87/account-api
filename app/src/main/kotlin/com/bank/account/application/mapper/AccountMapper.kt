@@ -11,7 +11,7 @@ import java.util.UUID
 fun CreateAccountDto.toDomain() = Account(
     id = UUID.fromString(this.id),
     owner = UUID.fromString(this.owner),
-    createAt = this.createAt,
+    createAt = this.createdAt,
     balance = this.balance.toDomain()
 )
 

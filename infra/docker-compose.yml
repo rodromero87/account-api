@@ -1,6 +1,7 @@
 services:
   mysql:
     image: mysql:8.0
+    container_name: mysql-account
     environment:
       MYSQL_DATABASE: account
       MYSQL_USER: account
@@ -8,9 +9,15 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
 
   localstack:
     image: localstack/localstack:latest
+    container_name: localstack
     environment:
       - SERVICES=sqs
       - AWS_DEFAULT_REGION=us-east-1

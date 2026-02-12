@@ -4,5 +4,5 @@ import java.time.Instant
 
 data class CreateAccountDto(val id: String,
                             val owner: String,
-                            val createAt: Instant,
+                            val createdAt: Instant,
                             val balance: BalanceDto)

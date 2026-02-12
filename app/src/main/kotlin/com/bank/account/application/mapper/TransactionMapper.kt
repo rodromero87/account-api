@@ -7,6 +7,7 @@ import com.bank.account.domain.enums.StatusTransaction
 import com.bank.account.domain.enums.TypeTransaction
 import com.bank.account.domain.model.Transaction
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.util.UUID
 
 fun CreateTransactionDto.toDomain(accountId: UUID): Transaction {
@@ -29,6 +30,6 @@ fun Transaction.toDto(): TransactionDto {
         type = this.type.name,
         currency = this.currency.name,
         status = this.status.name,
-        creatAt = LocalDateTime.from(this.timestamp)
+        creatAt = LocalDateTime.ofInstant(this.timestamp, ZoneOffset.UTC)
     )
 }

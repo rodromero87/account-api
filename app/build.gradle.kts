@@ -28,13 +28,17 @@ dependencies {
 
     // Migrations (recomendado pro desafio)
     implementation("org.flywaydb:flyway-core")
+    runtimeOnly("org.flywaydb:flyway-mysql")
+
 
     // Observability
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
 
     // SQS (LocalStack / AWS)
-    implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs:3.1.1")
+    implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:4.0.0")) // ou 4.0.0-RC1
+    implementation("io.awspring.cloud:spring-cloud-aws-starter-sqs")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 
     // Lombok (em Kotlin normalmente dá pra remover, mas pode deixar se já usa)
     compileOnly("org.projectlombok:lombok")
