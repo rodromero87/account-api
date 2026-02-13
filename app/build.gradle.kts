@@ -34,6 +34,7 @@ dependencies {
     // Observability
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
+    implementation("net.logstash.logback:logstash-logback-encoder:7.4")
 
     // SQS (LocalStack / AWS)
     implementation(platform("io.awspring.cloud:spring-cloud-aws-dependencies:4.0.0")) // ou 4.0.0-RC1
