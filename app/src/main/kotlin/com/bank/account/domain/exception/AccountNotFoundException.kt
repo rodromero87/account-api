@@ -1,4 +1,4 @@
 package com.bank.account.domain.exception
 
-class AccountNotFoundException(message: String) : RuntimeException(message) {
+class AccountNotFoundException(message: String = "Account not found") : RuntimeException(message) {
 }

@@ -7,11 +7,14 @@ import com.bank.account.application.usecase.ProcessNewTransactionUseCase
 import com.bank.account.domain.out.port.CreateTransactionPort
 import com.bank.account.domain.out.port.UpdateAccountPort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
 class ProcessNewTransactionService(val createTransactionPort: CreateTransactionPort,
     val updateAccountPort: UpdateAccountPort) : ProcessNewTransactionUseCase {
+
+    @Transactional
     override fun process(
         transaction: CreateTransactionDto,
         accountDto: CreateAccountDto
