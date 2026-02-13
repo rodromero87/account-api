@@ -1,26 +1,37 @@
-version: '3.8'
+version: "3.8"
 
 services:
-
   mysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: mysql-account
     environment:
       MYSQL_DATABASE: account
       MYSQL_USER: account
       MYSQL_PASSWORD: account
-      MYSQL_ROOT_PASSWORD: account
+      MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
     command: [ "--default-authentication-plugin=mysql_native_password" ]
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-paccount" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-proot" ]
       interval: 5s
       timeout: 3s
-      retries: 30
+      retries: 20
     networks:
       - observability
 
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localstack
+    environment:
+      SERVICES: sqs
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ACCESS_KEY_ID: test
+      AWS_SECRET_ACCESS_KEY: test
+    ports:
+      - "4566:4566"
+    networks:
+      - observability
 
   account-api:
     build: .
@@ -28,28 +39,27 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/account?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-account:3306/account?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: account
       SPRING_DATASOURCE_PASSWORD: account
-
-      # (opcional, mas ajuda a evitar o erro de dialect se o DB demorar)
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
-
-      # Localstack: no Mac, apontar pro host
-      SPRING_CLOUD_AWS_SQS_ENDPOINT: http://host.docker.internal:4566
+      SPRING_CLOUD_AWS_SQS_ENDPOINT: http://localstack:4566
+      SPRING_CLOUD_AWS_REGION_STATIC: us-east-1
+      SPRING_CLOUD_AWS_CREDENTIALS_ACCESS_KEY: test
+      SPRING_CLOUD_AWS_CREDENTIALS_SECRET_KEY: test
     depends_on:
       mysql:
         condition: service_healthy
+      localstack:
+        condition: service_started
     networks:
       - observability
-
-
 
   prometheus:
     image: prom/prometheus
     container_name: prometheus
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     ports:
       - "9090:9090"
     networks:
@@ -64,7 +74,6 @@ services:
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
     networks:
       - observability
-
 
   loki:
     image: grafana/loki:latest
@@ -86,4 +95,3 @@ services:
 
 networks:
   observability:
-
