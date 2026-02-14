@@ -76,6 +76,15 @@ Gerar **grandes volumes de eventos SQS** para:
 
 ### ▶️ Endpoint do Simulator
 
+Criamos um simulador para realização de um teste de alta carga. 
+
+Realizando esses testes percebemos que para os requisitos solicitado  no testes (2 mil tps) não precisamos fazer ajustes finos de consumo do sqs nem utilizar outras coroutines do Kotlin para mais perfomance. 
+
+Caso venha a ser necessário basta executar mais de uma instancia do account-api, porém hoje só estamos executando 1 que está executando mais de 150 mil transações por minuto como mostra na imagem abaixo. 
+
+![Infra](./doc/transacoes.png)
+
+
 Iniciado automaticamente via `setup.sh`.
 
 Base URL:
@@ -89,7 +98,7 @@ http://localhost:8099
 ```bash
 curl -X POST http://localhost:8099/simulator/transactions/start \
   -H "Content-Type: application/json" \
-  -d '{"totalMessages": 10000}'
+  -d '{"totalMessages": 150000,"ratePerMinute": 150000,"parallelism": 12}'
 ```
 
 Parâmetros:
@@ -97,8 +106,8 @@ Parâmetros:
 | Campo           | Descrição                            |
 | --------------- | ------------------------------------ |
 | `totalMessages` | Quantidade total de eventos a enviar |
-| `ratePerMinute` | (Opcional) Taxa por minuto           |
-| `parallelism`   | (Opcional) Nível de concorrência     |
+| `ratePerMinute` | Taxa por minuto           |
+| `parallelism`   | Nível de concorrência     |
 
 ---
 
