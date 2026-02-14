@@ -93,5 +93,10 @@ services:
     networks:
       - observability
 
+  simulatortransaction:
+    build:
+      context: ./simulatortransaction
+      dockerfile: Dockerfile
+
 networks:
   observability:
