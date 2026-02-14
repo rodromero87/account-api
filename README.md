@@ -164,6 +164,21 @@ chmod +x send-transaction.sh
 * `http://localhost:8099/swagger-ui/index.html`
 * `http://localhost:8099/v3/api-docs`
 
+
+### Prometheus
+* métricas raw `http://localhost:8080/actuator/prometheus`
+* Prometheus	`http://localhost:9090`
+
+### Grafana
+* Grafana	http://localhost:3000
+---
+O Grafana já sobe integrado com a prometheus, então basta executar a query fornecida 
+___
+
+```sum(rate(account_api_sqs_messages_received_total[1m])) * 60```
+___
+
+```sum(rate(account_api_sqs_messages_success_total[1m])) * 60```
 ---
 
 ## 📈 Próximos Passos
